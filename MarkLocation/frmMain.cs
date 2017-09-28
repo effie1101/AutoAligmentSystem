@@ -32,15 +32,16 @@ namespace MarkLocation
 
             this.OutputMsg("======================================",Color.Lime);
             //load image from file
-            Mat orignalImg = CvInvoke.Imread(this.txtFileName.Text,ImreadModes.AnyColor);
+            Mat originalImg = CvInvoke.Imread(this.txtFileName.Text,ImreadModes.AnyColor);
             this.OutputMsg("\n********* Loading Image **********", Color.WhiteSmoke);
             this.OutputMsg(string.Format("\t Image File: {0}", this.txtFileName.Text), Color.Aqua);
             //display image in imagebox
-            this.imgboxOriginal.Image = orignalImg;
+            this.imgboxOriginal.Image = originalImg;
 
             this.OutputMsg("\n********* Processing Image **********", Color.WhiteSmoke);
 
-            Mat cutImg = CutImage(orignalImg.ToImage<Bgr, byte>(), 450, 350, 400, 300).ToUMat().GetMat(AccessType.Fast);
+            //Mat cutImg = new Mat(originalImg, new Range(350, 650),new Range(450, 850));
+            Mat cutImg = CutImage(originalImg.ToImage<Bgr, byte>(), 450, 350, 400, 300).ToUMat().GetMat(AccessType.Fast);
             //CvInvoke.Imshow("Cut Image", cutImg);
             cutImg.Save("cutImg.png"); 
 
@@ -48,7 +49,7 @@ namespace MarkLocation
             Mat uimage = new Mat();
             Mat binaryImg = new Mat();
 
-            CvInvoke.CvtColor(cutImg, uimage, ColorConversion.Bgr2Gray);
+            CvInvoke.CvtColor(cutImg.ToImage<Bgr,byte>(), uimage, ColorConversion.Bgr2Gray);
 
             //use image pyr to remove noise
             UMat pyrDown = new UMat();
@@ -63,7 +64,7 @@ namespace MarkLocation
             #region Canny and edge detection
 
             Stopwatch watch = Stopwatch.StartNew();
-            double cannyThreshold = 200.0;
+            double cannyThreshold = 180.0;
 
             watch.Reset();
                 watch.Start();
@@ -91,6 +92,7 @@ namespace MarkLocation
                 watch.Start();
                 List<RotatedRect> boxList = new List<RotatedRect>(); //a box is a rotated rectangle
                 List<VectorOfPoint> contourList = new List<VectorOfPoint>();
+            VectorOfPoint markContour = new VectorOfPoint();
 
                 using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
                 {
@@ -104,7 +106,7 @@ namespace MarkLocation
                             CvInvoke.ApproxPolyDP(contour, approxContour, CvInvoke.ArcLength(contour, true) * 0.05, true);
                             if (CvInvoke.ContourArea(approxContour, false) > minContourArea) //only consider contours with area greater than 250
                             {
-                                if (approxContour.Size == 6) //The contour has 4 vertices.
+                                if (approxContour.Size == 6) //The contour has 6 vertices.
                                 {
                                     #region determine if all the angles in the contour are within [80, 100] degree
                                     bool isRectangle = true;
@@ -127,6 +129,7 @@ namespace MarkLocation
                                     {
                                         boxList.Add(CvInvoke.MinAreaRect(approxContour));
                                         contourList.Add(approxContour);
+                                        break;
                                     }
                                 }
                             }
@@ -151,25 +154,34 @@ namespace MarkLocation
                 //}
                 PointF markCenter = new PointF();
                 double markAngle = 0;
+            Mat testImg = new Mat();
 
-                if (boxList.Count > 0)
+            if (boxList.Count > 0)
                 {
-                    CvInvoke.Polylines(triangleRectangleImage, Array.ConvertAll(boxList[0].GetVertices(), Point.Round), true, new Bgr(Color.Red).MCvScalar, 2);
-                    CvInvoke.DrawContours(triangleRectangleImage, contourList[0], -1, new Bgr(Color.DarkOrange).MCvScalar);
-                    markCenter = boxList[0].Center;
+                //CvInvoke.Polylines(triangleRectangleImage, Array.ConvertAll(boxList[0].GetVertices(), Point.Round), true, new Bgr(Color.Red).MCvScalar, 2);
+                //CvInvoke.DrawContours(triangleRectangleImage, contourList[0], -1, new Bgr(Color.DarkOrange).MCvScalar);
+                CvInvoke.CvtColor(originalImg, testImg, ColorConversion.Gray2Bgr);
+                Point[] pts = Array.ConvertAll(boxList[0].GetVertices(), Point.Round);
+                for (int i = 0; i < pts.Length; i++)
+                {
+                    pts[i] = new Point(pts[i].X + 450, pts[i].Y + 350);
+                }
+                CvInvoke.Polylines(testImg, pts, true, new Bgr(Color.Red).MCvScalar, 2);
+
+                markCenter = boxList[0].Center;
                     markAngle = Math.Round(boxList[0].Angle, 3);
                     // CvInvoke.PutText(triangleRectangleImage, string.Format("Center: [{0},{1}]\nAngle: {2}", markCenter.X, markCenter.Y, markAngle), markCenter, FontFace.HersheyPlain, 1.0, new Bgr(Color.DarkOrange).MCvScalar);
                 }
 
                 this.OutputMsg(String.Format("\tMark center: {0}\n\tMark angle: {1}", markCenter, markAngle), Color.Gold);
 
-
-                this.imgboxDetectedRec.Image = triangleRectangleImage;
+                this.imgboxDetectedRec.Image = testImg;
+            triangleRectangleImage.Save("markImage");
                 #endregion
         }
 
         private void OutputMsg(string msg,Color foreColor)
-        {15
+        {
             this.txtOutput.SelectionColor = foreColor;
             this.txtOutput.AppendText(msg + "\r\n");
         }

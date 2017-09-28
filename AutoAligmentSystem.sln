@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoAligmentSystem", "AutoA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkLocation", "MarkLocation\MarkLocation.csproj", "{5FF0E41D-5E1A-4AE1-9E24-732C9FE437F2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoAlignment", "AutoAlignment\AutoAlignment.csproj", "{799C758A-7A97-4D68-A1BA-A817A34EB3CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkLocator", "MarkLocator\MarkLocator.csproj", "{3C59B704-F754-4E74-8714-71888475BE52}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{5FF0E41D-5E1A-4AE1-9E24-732C9FE437F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FF0E41D-5E1A-4AE1-9E24-732C9FE437F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FF0E41D-5E1A-4AE1-9E24-732C9FE437F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{799C758A-7A97-4D68-A1BA-A817A34EB3CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{799C758A-7A97-4D68-A1BA-A817A34EB3CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{799C758A-7A97-4D68-A1BA-A817A34EB3CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{799C758A-7A97-4D68-A1BA-A817A34EB3CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C59B704-F754-4E74-8714-71888475BE52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C59B704-F754-4E74-8714-71888475BE52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C59B704-F754-4E74-8714-71888475BE52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C59B704-F754-4E74-8714-71888475BE52}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

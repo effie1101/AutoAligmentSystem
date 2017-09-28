@@ -4,14 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarkLocation
+namespace MarkLocator
 {
-    public class OutputHelper
+    public class OutputManager
     {
         #region final alignment output
         private double _alignmentX;
         private double _alignmentY;
         private double _alignmentSita;
+
+        private string _markImgFile;
 
         #endregion
 
@@ -135,6 +137,22 @@ namespace MarkLocation
             set
             {
                 _probeHeadSita = value;
+            }
+        }
+
+        /// <summary>
+        /// full name of image that with the found mark
+        /// </summary>
+        public string MarkImgFile
+        {
+            get
+            {
+                return _markImgFile;
+            }
+
+            set
+            {
+                _markImgFile = value;
             }
         }
     }

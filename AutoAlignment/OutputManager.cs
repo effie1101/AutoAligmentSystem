@@ -1,17 +1,20 @@
-﻿using System;
+﻿using Emgu.CV;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarkLocation
+namespace AutoAlignment
 {
-    public class OutputHelper
+    public class OutputManager
     {
         #region final alignment output
         private double _alignmentX;
         private double _alignmentY;
         private double _alignmentSita;
+        private Bitmap _markLocatedImg;
 
         #endregion
 
@@ -135,6 +138,22 @@ namespace MarkLocation
             set
             {
                 _probeHeadSita = value;
+            }
+        }
+
+        /// <summary>
+        /// 识别并标示出mark轮廓的图像
+        /// </summary>
+        public Bitmap MarkLocatedImg
+        {
+            get
+            {
+                return _markLocatedImg;
+            }
+
+            set
+            {
+                _markLocatedImg = value;
             }
         }
     }
